@@ -1,0 +1,104 @@
+// Best First search
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef pair<int, int> pi;
+
+vector<vector<pi>> graph;
+
+// Function for adding edges to graph
+void addedge(int x, int y)
+{
+    graph[x].push_back(make_pair(x, y));
+    graph[y].push_back(make_pair(y, x));
+}
+
+// Function to calculate Manhattan distance between two coordinates
+int manhattan_distance(pi a, pi b)
+{
+    return abs(a.first - b.first) + abs(a.second - b.second);
+}
+
+// Function For Implementing Best First Search
+// Gives output path having lowest cost
+void best_first_search(int actual_Src, int target, int n, pi target_coordinates)
+{
+    vector<bool> visited(n, false);
+    // MIN HEAP priority queue
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    // sorting in pq gets done by first value of pair
+    pq.push(make_pair(0, actual_Src));
+    int s = actual_Src;
+    visited[s] = true;
+    while (!pq.empty())
+    {
+        int x = pq.top().second;
+        // Displaying the path having lowest cost
+        cout << x << " ";
+        pq.pop();
+        if (x == target)
+            break;
+
+        for (int i = 0; i < graph[x].size(); i++)
+        {
+            int neighbor = graph[x][i].second;
+            if (!visited[neighbor])
+            {
+                visited[neighbor] = true;
+                pair<int, int> neighbor_coordinates;
+                if (neighbor == 0)
+                    neighbor_coordinates = {0, 0};
+                else if (neighbor == 1)
+                    neighbor_coordinates = {1, 2};
+                else if (neighbor == 2)
+                    neighbor_coordinates = {2, 4};
+                else if (neighbor == 3)
+                    neighbor_coordinates = {3, 7};
+                else if (neighbor == 4)
+                    neighbor_coordinates = {6, 5};
+                else if (neighbor == 5)
+                    neighbor_coordinates = {7, 8};
+                else if (neighbor == 6)
+                    neighbor_coordinates = {8, 4};
+                else if (neighbor == 7)
+                    neighbor_coordinates = {9, 2};
+                else if (neighbor == 8)
+                    neighbor_coordinates = {8, 7};
+                else if (neighbor == 9)
+                    neighbor_coordinates = {10, 6};
+
+                int heuristic_value = manhattan_distance(neighbor_coordinates, target_coordinates);
+                pq.push(make_pair(heuristic_value, neighbor));
+            }
+        }
+    }
+}
+
+// Driver code to test above methods
+int main()
+{
+    // No. of Nodes
+    int v = 10;
+    graph.resize(v);
+
+    // The nodes shown in the above example(by alphabets) are
+    // implemented using integers addedge(x, y);
+    addedge(0, 1);
+    addedge(0, 2);
+    addedge(0, 3);
+    addedge(1, 4);
+    addedge(1, 5);
+    addedge(2, 6);
+    addedge(2, 7);
+    addedge(3, 8);
+    addedge(8, 9);
+
+    int source = 0;
+    int target = 9;
+    pi target_coordinates = {10, 6};
+
+    // Function call
+    best_first_search(source, target, v, target_coordinates);
+
+    return 0;
+}
