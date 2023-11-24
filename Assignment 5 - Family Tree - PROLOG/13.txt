@@ -1,0 +1,216 @@
+% Facts: Define relationships in the family tree
+male(vishnu).
+male(shivaji).
+male(tukaram).
+male(ajay).
+male(somesh).
+male(ramesh).
+male(rajendra).
+male(jitendra).
+male(nandu).
+male(ram).
+male(shri).
+male(kartik).
+male(mahesh).
+male(aditya).
+male(amit).
+male(om).
+male(tanu).
+male(vicky).
+male(rocky).
+male(ninad).
+male(pramod).
+
+
+female(mada).
+female(suman).
+female(hemlata).
+female(surekha).
+female(radha).
+female(jyoti).
+female(lata).
+female(prajakta).
+female(manasi).
+female(sneha).
+female(tanvi).
+female(sanika).
+female(priya).
+female(sayali).
+female(rutu).
+female(manjusha).
+female(anjusha).
+
+parent(vishnu, shivaji).
+parent(vishnu, tukaram).
+parent(vishnu, surekha).
+parent(vishnu, radha).
+parent(mada, shivaji).
+parent(mada, tukaram).
+parent(mada, surekha).
+parent(mada, radha).
+
+parent(shivaji, ramesh).
+parent(shivaji, jitendra).
+parent(shivaji, lata).
+parent(suman,ramesh).
+parent(suman,jitendra).
+parent(suman,lata).
+
+parent(tukaram,manasi).
+parent(hemlata,manasi).
+
+parent(surekha, ram).
+parent(surekha, shri).
+parent(ajay, ram).
+parent(ajay, shri).
+
+parent(radha,kartik).
+parent(radha,mahesh).
+parent(radha,sanika).
+parent(somesh,kartik).
+parent(somesh,mahesh).
+parent(somesh,sanika).
+
+parent(ramesh,aditya).
+parent(ramesh,priya).
+parent(jyoti,aditya).
+parent(jyoti,priya).
+
+parent(lata,sayali).
+parent(lata,rutu).
+parent(rajendra,sayali).
+parent(rajendra,rutu).
+
+parent(jitendra,om).
+parent(jitendra,tanu).
+parent(jitendra,manjusha).
+parent(jitendra,anjusha).
+parent(prajakta,om).
+parent(prajakta,tanu).
+parent(prajakta,manjusha).
+parent(prajakta,anjusha).
+
+parent(manasi,vicky).
+parent(nandu,vicky).
+
+parent(ram,rocky).
+parent(ram,ninad).
+parent(sneha,rocky).
+parent(sneha,ninad).
+
+parent(shri,pramod).
+parent(tanvi,pramod).
+
+father(X, Y) :- male(X), parent(X, Y).
+
+mother(X, Y) :- female(X), parent(X, Y).
+
+wife(X,Y) :- parent(X,Z),parent(Y,Z).
+
+father_in_law(X, Y) :- male(X),female(Y),parent(Y,T),grandfather(X,T).
+
+mother_in_law(X, Y) :- female(X),female(Y),parent(Y,T),grandmother(X,T).
+
+son(X, Y) :- male(X), parent(Y, X).
+
+daughter(X, Y) :- female(X), parent(Y, X).
+
+grandfather(X, Z) :- father(X, Y), parent(Y, Z).
+
+deer(X,Y) :- male(W),male(X),sibling(X,W),father(W,T),mother(Y,T).
+
+deerani(X,Y) :- mother(X,W),cousin(W,T),mother(Y,T).
+
+grandmother(X, Z) :- mother(X, Y), parent(Y, Z).
+
+sibling(X, Y) :- parent(Z, X), parent(Z, Y), X \= Y.
+
+cousin(X, Y) :- parent(Z, X), parent(W, Y), sibling(Z, W).
+
+uncle(X, Y) :- parent(Z, Y), sibling(X, Z), male(X).
+
+aunt(X, Y) :- cousin(Z, Y), mother(X, Z), female(X).
+
+second_uncle(X, Y) :-male(X),grandfather(W, Y), sibling(W,Z),son(X,Z).
+
+second_aunt(X, Y) :-female(X),grandfather(W, Y), sibling(W,Z),grandfather(Z,D),mother(X,D).
+
+second_cousin(X, Y) :- grandfather(W, Y), sibling(W,Z),grandfather(Z,X).
+
+second_grandfather(X,Y) :- grandfather(W,Y),sibling(W,X).
+
+second_grandmother(X,Y) :- second_uncle(W,Y),mother(X,W).
+
+great_grandfather(X, Z) :- father(X, Y), grandfather(Y, Z).
+
+great_grandmother(X, Z) :- mother(X, Y), grandfather(Y, Z).
+
+
+% Your family relationships and rules here
+find_relationship(X, Y) :-
+    father(X, Y), write(X), write(' is the father of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    wife(X, Y), write(X), write(' is the wife of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    mother(X, Y), write(X), write(' is the mother of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    son(X, Y), write(X), write(' is the son of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    daughter(X, Y), write(X), write(' is the daughter of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    grandfather(X, Y), write(X), write(' is the grandfather of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    sibling(X, Y), write(X), write(' is the sibling of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    father(Z, Y), mother(X, Z), write(X), write(' is the grandmother of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    second_grandmother(X,Y), write(X), write(' is the second grandmother of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    second_grandfather(X,Y), write(X), write(' is the second grandfather of '), write(Y), nl. 
+
+find_relationship(X, Y) :-
+    second_uncle(X, Y), write(X), write(' is the second-uncle of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    second_aunt(X, Y), write(X), write(' is the second-aunt of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    uncle(X, Y), write(X), write(' is the uncle of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    aunt(X, Y), write(X), write(' is the aunt of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    cousin(X, Y), write(X), write(' is the cousin of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    deerani(X, Y), write(X), write(' is the deerani of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    deer(X, Y), write(X), write(' is the deer of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    second_cousin(X, Y), write(X), write(' is the second cousin of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    father_in_law(X, Y), write(X), write(' is the father-in-law of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    mother_in_law(X, Y), write(X), write(' is the mother-in-law of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    great_grandfather(X, Y), write(X), write(' is the great-grandfather of '), write(Y), nl.
+
+find_relationship(X, Y) :-
+    great_grandmother(X, Y), write(X), write(' is the great-grandmother of '), write(Y), nl.    
+
+find_relationship(X, Y) :- write('Relationship not defined between '), write(X), write(' and '), write(Y), nl.
