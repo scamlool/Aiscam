@@ -1,0 +1,34 @@
+% Define facts about travel destinations and their attributes.
+destination(bali, beach, warm, adventure, affordable, relaxing, summer).
+destination(paris, city, mild, culture, expensive, romantic, spring).
+destination(tokyo, city, mild, culture, expensive, vibrant, fall).
+destination(iceland, nature, cold, adventure, expensive, serene, winter).
+destination(new_york, city, cold, culture, expensive, diverse, summer).
+destination(hawaii, beach, warm, adventure, expensive, exotic, spring).
+
+% Define rules to recommend destinations based on user preferences.
+recommend_destination(User, Destination) :-
+    ask_preferences(User, Type, Temperature, Activity, Cost, Atmosphere, Season),
+    (destination(Destination, Type, Temperature, Activity, Cost, Atmosphere, Season) ->
+        true ; 
+        write('Sorry, no location available based on your requirements.'), nl).
+
+% Ask the user about their travel preferences.
+ask_preferences(User, Type, Temperature, Activity, Cost, Atmosphere, Season) :-
+    write('Welcome, '), write(User), write('!'), nl,
+    write('What type of destination do you prefer? (beach/city/nature)'),
+    read(Type),
+    write('Do you prefer warm or cold weather? (warm/cold)'),
+    read(Temperature),
+    write('Are you looking for adventure or culture? (adventure/culture)'),
+    read(Activity),
+    write('Do you have a budget preference? (affordable/expensive)'),
+    read(Cost),
+    write('What kind of atmosphere do you prefer? (relaxing/romantic/vibrant/serene/diverse/exotic)'),
+    read(Atmosphere),
+    write('Which season are you planning to travel in? (spring/summer/fall/winter)'),
+    read(Season).
+
+% Example usage:
+% To recommend a travel destination for 'Alice':
+% recommend_destination(alice, Destination).
